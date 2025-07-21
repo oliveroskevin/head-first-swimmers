@@ -1,4 +1,4 @@
-from flask import Flask, session, render_template
+from flask import Flask, session, render_template, request
 from swimclub import read_swim_data
 
 import os
@@ -10,7 +10,7 @@ FOLDER = "/swimdata"
 
 @app.get("/")
 def index():
-    return "pop"
+    return render_template("index.html", title="Welcome to the swimclub system!!")
 
 def populate_data():
     if "swimmers" not in session:
@@ -26,13 +26,20 @@ def populate_data():
 @app.get("/swimmers")
 def display_swimmers():
     populate_data()
-    return str(sorted(session["swimmers"]))
+    return render_template("select.html", title='Select a swimmer', data=sorted(session["swimmers"]), select_id='swimmer', url="/showfiles")
+    # return str(sorted(session["swimmers"]))
     
 
 @app.get("/file/<swimmer>")
-def get_swimmer_Files(swimmer):
+def get_swimmer_files(swimmer):
     populate_data()
     return str(session["swimmers"][swimmer])
+
+@app.post("/showfiles")
+def display_swimmer_files():
+    populate_data()
+    name = request.form["swimmer"]
+    return render_template("select.html",url="/showbarchart", select_id="file", title="Select an event", data=session["swimmers"][name])
 
 
 
