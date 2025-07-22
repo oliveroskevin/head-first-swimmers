@@ -9,7 +9,7 @@ FOLDER = "/swimdata"
 
 @app.get("/")
 def index():
-    return render_template("index.html", title="Welcome to the swimclub system!!")
+    return render_template("index.html", title="Welcome to the Swimclub")
 
 def populate_data():
     if "swimmers" not in session:
