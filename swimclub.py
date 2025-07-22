@@ -34,7 +34,7 @@ def read_swim_data(filename):
 
     return swimmer, age, distance, stroke, swimmer_times, average_time, converts
 
-def produce_bar_chart(fn):
+def produce_bar_chart(fn, location=CHARTS):
     swimmer, age, distance, stroke, times, average, converts = read_swim_data(fn)
     from_max = max(converts)
     times.reverse()
@@ -65,7 +65,7 @@ def produce_bar_chart(fn):
     """
 
     page = header + body + footer
-    save_to = f"{CHARTS}/{fn.removesuffix('.txt')}.html"
+    save_to = f"{location}/{fn.removesuffix('.txt')}.html"
     with open(save_to, 'w') as sf:
         print(page, file=sf)
 

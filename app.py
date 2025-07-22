@@ -1,8 +1,7 @@
 from flask import Flask, session, render_template, request
-from swimclub import read_swim_data
+from swimclub import read_swim_data, produce_bar_chart, FOLDER
 
 import os
-import swimclub
 
 app = Flask(__name__)
 app.secret_key = "pares"
@@ -14,7 +13,7 @@ def index():
 
 def populate_data():
     if "swimmers" not in session:
-        swim_files = os.listdir(swimclub.FOLDER)
+        swim_files = os.listdir(FOLDER)
         swim_files.remove('.DS_Store')
         session["swimmers"] = {}
         for file in swim_files:
@@ -40,6 +39,12 @@ def display_swimmer_files():
     populate_data()
     name = request.form["swimmer"]
     return render_template("select.html",url="/showbarchart", select_id="file", title="Select an event", data=session["swimmers"][name])
+
+@app.post("/showbarchart")
+def show_bar_chart():
+    file_id = request.form["file"]
+    location = produce_bar_chart(file_id, "templates/")
+    return render_template(location.split("/"[-1]))
 
 
 
