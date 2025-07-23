@@ -5,7 +5,7 @@ import os
 
 app = Flask(__name__)
 app.secret_key = "pares"
-FOLDER = "/swimdata"
+FOLDER = "swimdata/"
 
 @app.get("/")
 def index():
