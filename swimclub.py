@@ -1,8 +1,10 @@
 import statistics
 import hfpy_utils
+import json
 
 FOLDER = 'swimdata/'
 CHARTS = 'charts/'
+JSONDATA = 'records.json'
 
 def read_swim_data(filename): 
     swimmer, age, distance, stroke = filename.removesuffix('.txt').split('-')
@@ -59,8 +61,16 @@ def produce_bar_chart(fn, location=CHARTS):
                         </svg>{t}<br/>
                         """
     
+    with open(JSONDATA) as jf:
+        records = json.load(jf)
+    COURSES =  ("LC MEN", "LC WOMEN", "SC MEN", "SC WOMEN")
+    time = []
+    for course in COURSES:
+        time.append(records[course][event_lookup(fn)])
+
     footer = f"""
             <p>Average time: {average}</p>
+            <p>M: {time[0]} ({time[2]})<br />W: {time[1]} ({time[3]})</p>
         </body>
     </html>
     """
@@ -72,3 +82,14 @@ def produce_bar_chart(fn, location=CHARTS):
 
     return save_to
 
+def event_lookup(filename: str):
+    *_, distance, stroke = filename.removesuffix('.txt').split('-')
+    conversions = {
+        "Free": "freestyle",
+        "Back": "backstroke",
+        "Breast": "breaststroke",
+        "Fly": "butterfly",
+        "IM": "individual medley"
+    }
+    
+    return f'{distance} {conversions[stroke]}'
